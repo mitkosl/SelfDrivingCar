@@ -31,7 +31,6 @@ class Car {
             this.sensor.update(borders,traffic);
             const offsets = this.sensor.readings.map(r => r==null ? 0 : 1-r.offset);
             const outputs = NeuralNetwork.feedForward(offsets, this.brain);
-            console.log(outputs);
 
             if(this.useAI){
                 this.controls.forward = outputs[0];
@@ -80,7 +79,7 @@ class Car {
         return points;
     }
 
-    draw(context, color){
+    draw(context, color, drawSensor=false){
         if(this.damaged){
             context.fillStyle = "red";
         } else {
@@ -93,7 +92,7 @@ class Car {
         }
         context.fill();
 
-        if(this.sensor){
+        if(this.sensor && drawSensor){
             this.sensor.draw(context);
         }
     }
