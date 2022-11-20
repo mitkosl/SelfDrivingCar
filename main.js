@@ -24,7 +24,7 @@ if(localStorage.getItem("bestAICar")){
     
 }
 
-const traffic = [
+let traffic = [
     new Car(road.getLaneCenter(0),-280,30,50,"DUMMY",2),
     new Car(road.getLaneCenter(1),-100,30,50,"DUMMY",2),
     new Car(road.getLaneCenter(2),-300,30,50,"DUMMY",2),
@@ -38,12 +38,26 @@ const traffic = [
 
 animate();
 
+carCanvas.addEventListener('mousedown', e => {
+    var coordinates = getCursorPosition(carCanvas, e);
+    AddTraffic(coordinates);
+})
+
 function save(){
     localStorage.setItem("bestAICar", JSON.stringify(bestCar.brain));
 }
 
 function discard(){
     localStorage.removeItem("bestAICar");
+}
+
+function AddTraffic(coords) {
+    const laneWidth = carCanvas.width / road.laneCount;
+    const laneNumber = Math.floor(coords.x/laneWidth);
+    console.log(bestCar.y, carCanvas.height*0.7, coords.y, carCanvas.height*0.7 - coords.y)
+    const yCoord =  bestCar.y - (carCanvas.height*0.7 - coords.y)
+    console.log(yCoord)
+    traffic.push(new Car(road.getLaneCenter(laneNumber),yCoord,30,50,"DUMMY",2));
 }
 
 function generateCars(N){
