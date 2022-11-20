@@ -11,15 +11,28 @@ const road = new Road(carCanvas.width/2, carCanvas.width*0.9);
 
 // const car = new Car(road.getLaneCenter(1),200,30,50,"KEYS");
 // const car = new Car(road.getLaneCenter(1),200,30,50,"AI");
-const N = 100;
+const N = 200;
 const cars = generateCars(N);
 let bestCar = cars[0];
 if(localStorage.getItem("bestAICar")){
-    bestCar.brain = JSON.parse(localStorage.getItem("bestAICar"));
+    for (let i = 0; i < cars.length; i++) {
+        cars[i].brain = JSON.parse(localStorage.getItem("bestAICar"));
+        if(i != 0){
+            NeuralNetwork.mutate(cars[i].brain,0.2);
+        }
+    }
+    
 }
 
 const traffic = [
-    new Car(road.getLaneCenter(1),-100,30,50,"DUMMY",2)
+    new Car(road.getLaneCenter(0),-280,30,50,"DUMMY",2),
+    new Car(road.getLaneCenter(1),-100,30,50,"DUMMY",2),
+    new Car(road.getLaneCenter(2),-300,30,50,"DUMMY",2),
+    new Car(road.getLaneCenter(0),-500,30,50,"DUMMY",2),
+    new Car(road.getLaneCenter(1),-500,30,50,"DUMMY",2),
+    new Car(road.getLaneCenter(0),-700,30,50,"DUMMY",2),
+    new Car(road.getLaneCenter(2),-670,30,50,"DUMMY",2),
+    new Car(road.getLaneCenter(0),-970,30,50,"DUMMY",2),
 ];
 // car.draw(context);
 
@@ -62,13 +75,13 @@ function animate(time){
 
     road.draw(carContext);
     for (let i = 0; i < traffic.length; i++) {
-        traffic[i].draw(carContext, "gray");
+        traffic[i].draw(carContext, "orange");
     }
 
     carContext.globalAlpha=0.2;
     // car.draw(carContext, "black");
     for (let i = 0; i < cars.length; i++) {
-        cars[i].draw(carContext, "black");
+        cars[i].draw(carContext, "blue");
     }
     carContext.globalAlpha=1;
     bestCar.draw(carContext, "black",true);
