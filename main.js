@@ -2,7 +2,7 @@ const carCanvas = document.getElementById("carCanvas");
 carCanvas.width = 200;
 
 const networkCanvas = document.getElementById("networkCanvas");
-networkCanvas.width = 300;
+networkCanvas.width = 400;
 
 const carContext = carCanvas.getContext("2d");
 const networkContext = networkCanvas.getContext("2d");
@@ -21,7 +21,6 @@ if(localStorage.getItem("bestAICar")){
             NeuralNetwork.mutate(cars[i].brain,0.2);
         }
     }
-    
 }
 
 let traffic = [
@@ -102,7 +101,7 @@ function animate(time){
 
     carContext.restore();
 
-    networkContext.lineDashOffset = -time*50;
-    // Visualizer.drawNetwork(networkContext,bestCar.brain);
+    networkContext.lineDashOffset = -time/50;
+    Visualizer.drawNetwork(networkContext,bestCar.brain);
     requestAnimationFrame(animate);
 }
