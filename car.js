@@ -1,5 +1,5 @@
 class Car {
-    constructor(x,y,width,height,controlType,maxSpeed=3){
+    constructor(x,y,width,height,controlType,maxSpeed=3, color="lightBlue"){
         this.x = x;
         this.y = y;
         this.width = width;
@@ -19,6 +19,22 @@ class Car {
             this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
         }
         this.controls = new Controls(controlType);
+
+        this.image = new Image();
+        this.image.src = "car.png";
+        this.mask = document.createElement("canvas");
+        this.mask.width = this.width;
+        this.mask.height = this.height;
+
+        const maskContext = this.mask.getContext("2d");
+        this.image.onload = () => {
+            maskContext.fillStyle = color;
+            maskContext.rect(0,0,this.width, this.height);
+            maskContext.fill();
+
+            maskContext.globalCompositeOperation = "destination-atop";
+            maskContext.drawImage(this.image,0,0,this.width,this.height);
+        }
     }
 
     update(borders, traffic){  
@@ -79,22 +95,31 @@ class Car {
         return points;
     }
 
-    draw(context, color, drawSensor=false){
-        if(this.damaged){
-            context.fillStyle = "red";
-        } else {
-            context.fillStyle = color;
-        }
-        context.beginPath();
-        context.moveTo(this.polygon[0].x,this.polygon[0].y);
-        for (let i = 1; i < this.polygon.length; i++) {
-            context.lineTo(this.polygon[i].x,this.polygon[i].y);
-        }
-        context.fill();
-
-        if(this.sensor && drawSensor){
+    draw(context, drawSensor=false){
+        // if(this.damaged){
+        //     context.fillStyle = "red";
+        // } else {
+        //     context.fillStyle = color;
+        // }
+        // context.beginPath();
+        // context.moveTo(this.polygon[0].x,this.polygon[0].y);
+        // for (let i = 1; i < this.polygon.length; i++) {
+        //     context.lineTo(this.polygon[i].x,this.polygon[i].y);
+        // }
+        // context.fill();
+        
+         if(this.sensor && drawSensor){
             this.sensor.draw(context);
         }
+        context.save();
+        context.translate(this.x,this.y);
+        context.rotate(-this.angle);
+        if(!this.damaged) {
+            context.drawImage(this.mask, -this.width/2, -this.height/2, this.width, this.height);
+            context.globalCompositeOperation = "multiply";
+        }
+        context.drawImage(this.image, -this.width/2, -this.height/2, this.width, this.height);
+        context.restore();
     }
 
     #move(){
