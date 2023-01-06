@@ -20,6 +20,13 @@ class Road{
             [topLeft, bottomLeft],
             [topRight,bottomRight]
         ]
+        // for (let y=-1000; y <= 0; y++) {
+        //     const x = Math.sin(y*0.01)*50;
+        //     this.borders[0].push({x: this.x+this.left, y:y});
+        //     this.borders[1].push({x: this.x+this.right, y:y});   
+        // }
+        // this.borders[0].push(bottomLeft);
+        // this.borders[1].push(bottomRight);
     }
 
     getLaneCenter(laneIndex)
@@ -47,7 +54,9 @@ class Road{
             {
                 cont.beginPath();
                 cont.moveTo(border[0].x,border[0].y);
-                cont.lineTo(border[1].x,border[1].y);
+                for(let i=1;i<border.length;i++ ) {
+                    cont.lineTo(border[i].x,border[i].y);
+                }
                 cont.stroke();
             });
     }
